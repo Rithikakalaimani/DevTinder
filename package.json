@@ -1,0 +1,27 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "tinder for Devs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rithikakalaimani/DevTinder.git"
+  },
+  "keywords": [
+    "node.js",
+    "Javascript"
+  ],
+  "author": "Rithika",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rithikakalaimani/DevTinder/issues"
+  },
+  "homepage": "https://github.com/Rithikakalaimani/DevTinder#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
