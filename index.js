@@ -65,7 +65,7 @@ app.patch("/user", async (req, res) => {
   const userId = req.body.userId;
   const updateData = req.body;
   try {
-    const updatedUser = await User.find({ _id: userId }, updateData,{ new: true });
+    const updatedUser = await User.findByIdAndUpdate({ _id: userId }, updateData, { new: true , runValidators: true });
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     } else {
@@ -77,9 +77,7 @@ app.patch("/user", async (req, res) => {
 });
 
 
-
-
-http: db()
+ db()
   .then(() => {
     console.log("Database connection is successful");
     app.listen(PORT, () => {
