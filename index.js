@@ -64,6 +64,18 @@ app.get("/user", async (req, res) => {
 app.patch("/user", async (req, res) => {
   const userId = req.body.userId;
   const updateData = req.body;
+  //       "about": "This is about me section.",
+  //       "skills": [],
+  //       "profilePicture": "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80",
+  //       "_id": "68d970c227185b07bd6b9e3c",
+  //       "firstName": "ManiBoi",
+  //       "lastName": "S",
+  //       "emailId": "kljknlkkkkkkkk",
+  //       "password": "rithika123",
+  //       "age": 23,
+  //       "gender": "male",
+    const allowedUpdates = ["userId","firstName", "lastName", "password", "age", "gender", "about", "skills", "profilePicture"];
+    const isValidOperation = Object.keys(updateData).every((update) => allowedUpdates.includes(update));    
   try {
     const updatedUser = await User.findByIdAndUpdate({ _id: userId }, updateData, { new: true , runValidators: true });
     if (!updatedUser) {
@@ -74,9 +86,7 @@ app.patch("/user", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error updating user", error: err });
   }
-});
-
-
+});    
  db()
   .then(() => {
     console.log("Database connection is successful");
