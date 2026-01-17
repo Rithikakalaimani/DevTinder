@@ -38,16 +38,29 @@ app.post("/signup", async (req, res) => {
 });
 
 
-// app.use("/signup",async (req,res)=>{
-//   const user = new User(req.body);
-//   await user.save()
-//     .then((savedUser) => {
-//       res.status(201).json({ message: "User created successfully", user: savedUser });
-//     })
-//     .catch((err) => {
-//       res.status(500).json({ message: "Error creating user", error: err });
-//     });
-// })
+app.post("/login", async (req, res) => {
+  try {
+
+    const {emailId, password } = req.body;
+    const user = await User.findOne({emailId : emailId});
+
+    //user not found
+    if(!user){
+      return res.status(404).json({message:"User not found"});
+    }
+
+    //compare password
+    const isPassword = await bcrypt.compare(password, user.password);
+    if(!isPassword){
+      return res.status(400).json({message:"Invalid credentials"});
+    }
+    //Login successful
+    res.status(200).json({message:"Login successful"});
+
+  } catch (err) {
+    res.status(400).json({ message: err.message || "Signup failed" });
+  }
+});
 
 app.get("/user",async(req,res)=>{
   try{
