@@ -1,21 +1,53 @@
 const express = require("express");
 const db = require("./src/config/database");
 const User = require("./src/models/user");
+const bcrypt = require("bcrypt");
+const{validationSignup} = require("./src/utils/validation");
+
 
 const app = express();
 app.use(express.json());
 const PORT = 3000;
 
-app.use("/signup",async (req,res)=>{
-  const user = new User(req.body);
-  await user.save()
-    .then((savedUser) => {
-      res.status(201).json({ message: "User created successfully", user: savedUser });
-    })
-    .catch((err) => {
-      res.status(500).json({ message: "Error creating user", error: err });
+app.post("/signup", async (req, res) => {
+  try {
+    // validation logic
+    validationSignup(req);
+
+    //Encrypt password
+    const { firstName, lastName, emailId, password, age, skills } = req.body;
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: hashPassword,
+      age,
+      skills,
     });
-})
+
+    const savedUser = await user.save();
+    res.status(201).json({
+      message: "User created successfully",
+      user: savedUser,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message || "Signup failed" });
+  }
+});
+
+
+// app.use("/signup",async (req,res)=>{
+//   const user = new User(req.body);
+//   await user.save()
+//     .then((savedUser) => {
+//       res.status(201).json({ message: "User created successfully", user: savedUser });
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ message: "Error creating user", error: err });
+//     });
+// })
 
 app.get("/user",async(req,res)=>{
   try{
@@ -86,7 +118,10 @@ app.patch("/user", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error updating user", error: err });
   }
-});    
+}); 
+
+
+// Database connection and server start
  db()
   .then(() => {
     console.log("Database connection is successful");
